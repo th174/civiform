@@ -64,9 +64,14 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
 
   @Override
   public ImmutableList<Block> getAllActiveBlocks() {
+    System.out.println("get all active blocks");
+    System.out.println(allBlockList);
     if (allBlockList == null) {
       allBlockList = getBlocks(this::showBlock);
+      System.out.println("getAllActiveBlocks call getBlocks");
+      System.out.println(allBlockList);
     }
+
     return allBlockList;
   }
 
@@ -80,7 +85,10 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
 
   @Override
   public ImmutableList<Block> getInProgressBlocks() {
+    System.out.println("get getInProgressBlocks");
+    System.out.println(currentBlockList);
     if (currentBlockList == null) {
+      System.out.println("get getInProgressBlocks call getBlocks");
       currentBlockList =
           getBlocks(
               block ->
@@ -90,6 +98,7 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
                           || block.wasAnsweredInProgram(programDefinition.id())
                           || block.containsStatic())
                       && showBlock(block));
+      System.out.println(currentBlockList);
     }
     return currentBlockList;
   }
@@ -217,6 +226,7 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
       Optional<RepeatedEntity> maybeRepeatedEntity,
       Predicate<Block> includeBlockIfTrue) {
     ImmutableList.Builder<Block> blockListBuilder = ImmutableList.builder();
+    System.out.println("start getblocks");
 
     for (BlockDefinition blockDefinition : blockDefinitions) {
       // Create and maybe include the block for this block definition.
@@ -232,6 +242,7 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
 
       // For an enumeration block definition, build blocks for its repeated questions
       if (blockDefinition.isEnumerator()) {
+        System.out.println(" getblocks found enum");
 
         // Get all the repeated entities enumerated by this enumerator question.
         EnumeratorQuestionDefinition enumeratorQuestionDefinition =
@@ -250,6 +261,7 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
             programDefinition.getBlockDefinitionsForEnumerator(blockDefinition.id());
         for (int i = 0; i < repeatedEntities.size(); i++) {
           String nextBlockIdSuffix = String.format("%s-%d", blockIdSuffix, i);
+          System.out.println(" getblocks adding enum child " + nextBlockIdSuffix);
           blockListBuilder.addAll(
               getBlocks(
                   repeatedBlockDefinitions,
@@ -266,8 +278,14 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
   private boolean showBlock(Block block) {
     if (block.getVisibilityPredicate().isEmpty()) {
       // Default to show
+      System.out.println(
+          " getblocks NO visibility predicate for " + block.getId() + " " + block.getName());
       return true;
     }
+
+    System.out.println(
+        " getblocks found visibility predicate for " + block.getId() + " " + block.getName());
+    System.out.println(block.getVisibilityPredicate());
 
     JsonPathPredicateGenerator predicateGenerator =
         new JsonPathPredicateGenerator(
