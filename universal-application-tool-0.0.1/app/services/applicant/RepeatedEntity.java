@@ -4,6 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import services.Path;
+import services.program.predicate.PredicateDefinition;
 import services.question.types.EnumeratorQuestionDefinition;
 
 /** A repeated entity represents one of the applicant's answers to an enumerator question. */
@@ -93,10 +94,26 @@ public abstract class RepeatedEntity {
   }
 
   /**
+   * Gets visibility for all parents of the repeated entity.
+   */
+  public ImmutableList<PredicateDefinition> parentVisibility() {
+    return parent().map(p -> p.parentVisibility())
+        .orElse(ImmutableList.<PredicateDefinition>of());
+
+    // ImmutableList<PredicateDefinition> visibilityPredicates = Stream
+    // .concat(parentVisibilityPredicates.stream(),
+    // block.getVisibilityPredicate().stream())
+    // .collect(ImmutableList.toImmutableList());
+    // return updatedText.replace(target, entityName());
+  }
+
+  /**
    * Contextualize the text with repeated entity names.
    *
-   * <p>Replaces "\$this" with this repeated entity's name. "\$this.parent" and
-   * "\$this.parent.parent" (ad infinitum) are replaced with the names of the ancestors of this
+   * <p>
+   * Replaces "\$this" with this repeated entity's name. "\$this.parent" and
+   * "\$this.parent.parent" (ad infinitum) are replaced with the names of the
+   * ancestors of this
    * repeated entity.
    */
   public String contextualize(String text) {

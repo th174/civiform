@@ -276,6 +276,9 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
   }
 
   private boolean showBlock(Block block) {
+    if (block.getRepeatedEntity().isPresent()) {
+
+    }
     if (block.getVisibilityPredicate().isEmpty()) {
       // Default to show
       System.out.println(
