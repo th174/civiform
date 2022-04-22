@@ -39,7 +39,6 @@ lazy val root = (project in file("."))
       "pl.pragmatists" % "JUnitParams" % "1.1.1" % Test,
 
       // Testing libraries
-      "org.assertj" % "assertj-core" % "3.14.0" % Test,
       "org.mockito" % "mockito-core" % "4.5.0",
       "org.assertj" % "assertj-core" % "3.22.0" % Test,
       // EqualsTester
@@ -151,3 +150,9 @@ resolveFromWebjarsNodeModulesDir := true
 playRunHooks += TailwindBuilder(baseDirectory.value)
 // Reload when the build.sbt file changes.
 Global / onChangedBuildSource := ReloadOnSourceChanges
+EclipseKeys.preTasks := Seq(compile in Compile, compile in Test)
+// Java project. Don't expect Scala IDE
+EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
+
+// Use .class files instead of generated .scala files for views and routes
+EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)
