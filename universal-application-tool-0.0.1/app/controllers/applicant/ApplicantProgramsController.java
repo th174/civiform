@@ -28,6 +28,7 @@ import services.program.ProgramDefinition;
 import services.program.ProgramNotFoundException;
 import views.applicant.ApplicantProgramInfoView;
 import views.applicant.ProgramIndexView;
+import services.applicant.ReadOnlyApplicantProgramService;
 
 /**
  * Controller for handling methods for an applicant applying to programs. CAUTION: you must
