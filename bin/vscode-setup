@@ -24,7 +24,7 @@ cp server/temp/scala-*/*.pom \
 rm -rf server/temp
 
 BUILD=$(
-         cat <<END
+  cat <<END
 <build>
         <sourceDirectory>app</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
